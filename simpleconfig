@@ -3,43 +3,42 @@ using System.Collections.Generic;
 
 public class SimpleConfigurationReader : IConfigurationReader
 {
-    // Read these from environment variables, settings files, etc.
+    // Static config - you can load these dynamically from config files, environment variables, etc.
     private readonly Dictionary<string, string> _settings = new()
     {
-        { "ServerUrl", "http://localhost:8200" },       // Adjust to your APM Server URL
-        { "ServiceName", "MyWpfApp" },                   // Your app's name (visible in Kibana)
-        { "Environment", "Development" }                  // Environment tag (Development, Production, etc.)
+        { "ServerUrl", "http://localhost:8200" },    // Change to match your APM server
+        { "ServiceName", "MyWpfApp" },                // Name shown in Kibana
+        { "Environment", "Development" }              // Tag - e.g., Development/Production
     };
 
+    public string ApiKey => null;  // Only needed if your APM server uses API keys.
     public string CaptureBody => ConfigConsts.DefaultValues.CaptureBody;
     public List<WildcardMatcher> DisableMetrics => new();
     public string Environment => _settings["Environment"];
-    public IReadOnlyCollection<string> ExcludedNamespaces => new List<string>();
+    public IReadOnlyCollection<string> ExcludedNamespaces => Array.Empty<string>();
     public double ExitSpanMinDuration => ConfigConsts.DefaultValues.ExitSpanMinDuration;
     public bool UseElasticTraceparentHeader => ConfigConsts.DefaultValues.UseElasticTraceparentHeader;
     public IReadOnlyList<WildcardMatcher> SanitizeFieldNames => ConfigConsts.DefaultValues.SanitizeFieldNames;
-    public string SecretToken => ""; // Add if your APM server requires a token.
+    public string SecretToken => null;  // Only needed if your APM server requires one.
     public string ServerUrl => _settings["ServerUrl"];
     public string ServiceName => _settings["ServiceName"];
     public string ServiceVersion => "1.0.0";
     public double SpanFramesMinDurationInMilliseconds => ConfigConsts.DefaultValues.SpanFramesMinDurationInMilliseconds;
     public int StackTraceLimit => ConfigConsts.DefaultValues.StackTraceLimit;
-    public bool VerifyServerCert => ConfigConsts.DefaultValues.VerifyServerCert;
+    public bool VerifyServerCert => true;  // Set to false if using self-signed certificates in dev.
     public bool CentralConfig => false;
     public IReadOnlyList<WildcardMatcher> TransactionIgnoreUrls => new List<WildcardMatcher>();
     public bool Recording => true;
-    public LogLevel LogLevel => LogLevel.Warning;  // You can change to Debug for troubleshooting.
-
-    public string ApiKey => null; // Add if using API key authentication.
-
-    public IReadOnlyList<WildcardMatcher> TransactionSampleRate => new List<WildcardMatcher>();
-
-    public bool DisableSend => false;
-
+    public LogLevel LogLevel => LogLevel.Warning;  // Set to Debug for more detail during setup.
     public IReadOnlyDictionary<string, string> GlobalLabels => new Dictionary<string, string>();
+
+    public bool DisableSend => false;  // Set to true to disable sending data to APM server.
+    public double TransactionSampleRate => 1.0;  // 1.0 means sample 100% of transactions.
+
+    public IReadOnlyList<WildcardMatcher> IgnoreMessageQueues => Array.Empty<WildcardMatcher>();
 
     public SimpleConfigurationReader()
     {
-        // Optional: Load from environment variables, config files, etc., if desired.
+        // Optional - you could dynamically read settings here (appsettings.json, environment vars, etc.)
     }
 }
