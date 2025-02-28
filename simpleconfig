@@ -1,0 +1,45 @@
+using Elastic.Apm.Config;   // Required for IConfigurationReader.
+using System.Collections.Generic;
+
+public class SimpleConfigurationReader : IConfigurationReader
+{
+    // Read these from environment variables, settings files, etc.
+    private readonly Dictionary<string, string> _settings = new()
+    {
+        { "ServerUrl", "http://localhost:8200" },       // Adjust to your APM Server URL
+        { "ServiceName", "MyWpfApp" },                   // Your app's name (visible in Kibana)
+        { "Environment", "Development" }                  // Environment tag (Development, Production, etc.)
+    };
+
+    public string CaptureBody => ConfigConsts.DefaultValues.CaptureBody;
+    public List<WildcardMatcher> DisableMetrics => new();
+    public string Environment => _settings["Environment"];
+    public IReadOnlyCollection<string> ExcludedNamespaces => new List<string>();
+    public double ExitSpanMinDuration => ConfigConsts.DefaultValues.ExitSpanMinDuration;
+    public bool UseElasticTraceparentHeader => ConfigConsts.DefaultValues.UseElasticTraceparentHeader;
+    public IReadOnlyList<WildcardMatcher> SanitizeFieldNames => ConfigConsts.DefaultValues.SanitizeFieldNames;
+    public string SecretToken => ""; // Add if your APM server requires a token.
+    public string ServerUrl => _settings["ServerUrl"];
+    public string ServiceName => _settings["ServiceName"];
+    public string ServiceVersion => "1.0.0";
+    public double SpanFramesMinDurationInMilliseconds => ConfigConsts.DefaultValues.SpanFramesMinDurationInMilliseconds;
+    public int StackTraceLimit => ConfigConsts.DefaultValues.StackTraceLimit;
+    public bool VerifyServerCert => ConfigConsts.DefaultValues.VerifyServerCert;
+    public bool CentralConfig => false;
+    public IReadOnlyList<WildcardMatcher> TransactionIgnoreUrls => new List<WildcardMatcher>();
+    public bool Recording => true;
+    public LogLevel LogLevel => LogLevel.Warning;  // You can change to Debug for troubleshooting.
+
+    public string ApiKey => null; // Add if using API key authentication.
+
+    public IReadOnlyList<WildcardMatcher> TransactionSampleRate => new List<WildcardMatcher>();
+
+    public bool DisableSend => false;
+
+    public IReadOnlyDictionary<string, string> GlobalLabels => new Dictionary<string, string>();
+
+    public SimpleConfigurationReader()
+    {
+        // Optional: Load from environment variables, config files, etc., if desired.
+    }
+}
