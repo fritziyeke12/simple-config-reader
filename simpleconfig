@@ -2,82 +2,81 @@ using Elastic.Apm.Config;   // Required for IConfigurationReader.
 using System.Collections.Generic;
 
 public class SimpleConfigurationReader : IConfigurationReader
-{
-    // These settings are hard-coded here.
-    // In a real project, you might read these from a config file or environment variables.
+{   
+    // Hard-coded settings. In a real app you might read these from environment variables.
     private readonly Dictionary<string, string> _settings = new()
     {
-        { "ServerUrl", "http://localhost:8200" },   // Change this to your APM server URL.
-        { "ServiceName", "MyWpfApp" },                // This is the name that will appear in Kibana.
-        { "Environment", "Development" }              // Environment tag, e.g., Development or Production.
+        { "ServerUrl", "http://localhost:8200" },   // Change to your APM Server URL.
+        { "ServiceName", "MyWpfApp" },                // The name your service shows in Kibana.
+        { "Environment", "Development" }              // For example: Development, Production, etc.
     };
 
-    // If your APM server uses an API key, add it here; otherwise, keep it null.
+    // If you need an API key for your APM Server, set it here; otherwise, keep it null.
     public string ApiKey => null;
 
-    // How to capture HTTP bodies; using the default from the agent.
+    // How to capture HTTP request/response bodies. We use the default setting.
     public string CaptureBody => ConfigConsts.DefaultValues.CaptureBody;
 
-    // Metrics you want to disable; here we disable none.
-    public List<WildcardMatcher> DisableMetrics => new();
+    // Metrics that should be disabled – we’re not disabling any.
+    public IReadOnlyList<WildcardMatcher> DisableMetrics => new List<WildcardMatcher>();
 
-    // Returns the environment setting from our dictionary.
+    // The environment (Development, Production, etc.)
     public string Environment => _settings["Environment"];
 
-    // Namespaces to exclude; here we use an empty array.
+    // Namespaces to exclude from stack traces; we leave this empty.
     public IReadOnlyCollection<string> ExcludedNamespaces => Array.Empty<string>();
 
-    // The minimum duration for exit spans; using the default.
+    // Minimum duration for an exit span – we use the default.
     public double ExitSpanMinDuration => ConfigConsts.DefaultValues.ExitSpanMinDuration;
 
-    // Whether to use the Elastic traceparent header; using default.
+    // Whether to use the Elastic traceparent header – default.
     public bool UseElasticTraceparentHeader => ConfigConsts.DefaultValues.UseElasticTraceparentHeader;
 
-    // Fields to sanitize; using default values.
+    // Fields that should be sanitized – use the default list.
     public IReadOnlyList<WildcardMatcher> SanitizeFieldNames => ConfigConsts.DefaultValues.SanitizeFieldNames;
 
-    // Secret token for the APM server; not needed in our simple setup.
+    // A secret token if your APM Server requires one – null if not.
     public string SecretToken => null;
 
-    // Returns the APM server URL.
+    // The APM Server URL.
     public string ServerUrl => _settings["ServerUrl"];
 
-    // Returns the service name.
+    // The name of your service.
     public string ServiceName => _settings["ServiceName"];
 
-    // You can hard-code your app version here.
+    // Your service version.
     public string ServiceVersion => "1.0.0";
 
-    // Minimum duration (in ms) for recording span frames; using default.
+    // Minimum duration (in ms) for capturing span frames – default.
     public double SpanFramesMinDurationInMilliseconds => ConfigConsts.DefaultValues.SpanFramesMinDurationInMilliseconds;
 
-    // Limit for stack trace depth; using default.
+    // Maximum number of stack trace frames – default.
     public int StackTraceLimit => ConfigConsts.DefaultValues.StackTraceLimit;
 
-    // Whether to verify the server certificate; set to true for production.
+    // Whether to verify the server certificate. Set to true in production.
     public bool VerifyServerCert => true;
 
-    // Whether to enable central configuration; false in this case.
+    // Whether to use central configuration – we’re not using that.
     public bool CentralConfig => false;
 
-    // URLs to ignore for transactions; here we use an empty list.
+    // URLs to ignore for transactions – none in our simple setup.
     public IReadOnlyList<WildcardMatcher> TransactionIgnoreUrls => new List<WildcardMatcher>();
 
-    // Whether recording is enabled.
+    // Whether the agent is recording – true to record.
     public bool Recording => true;
 
-    // The log level to use; you can change to Debug for more verbosity.
+    // The log level – set to Warning (you can change to Debug for more details).
     public LogLevel LogLevel => LogLevel.Warning;
 
-    // Global labels that are sent with every transaction; here we have none.
+    // Global labels that are attached to every transaction – none here.
     public IReadOnlyDictionary<string, string> GlobalLabels => new Dictionary<string, string>();
 
-    // Whether to disable sending data; false so that data is sent.
+    // Whether sending data is disabled – false means we are sending data.
     public bool DisableSend => false;
 
-    // Transaction sample rate; 1.0 means sample every transaction.
+    // Transaction sample rate. 1.0 means sample every transaction.
     public double TransactionSampleRate => 1.0;
 
-    // Message queues to ignore; here we use an empty list.
-    public IReadOnlyList<WildcardMatcher> IgnoreMessageQueues => Array.Empty<WildcardMatcher>();
+    // Message queues to ignore – not used in this simple setup.
+    public IReadOnlyList<WildcardMatcher> IgnoreMessageQueues => new List<WildcardMatcher>();
 }
